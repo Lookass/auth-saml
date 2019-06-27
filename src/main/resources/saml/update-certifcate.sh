@@ -1,6 +1,7 @@
 #!/bin/bash
 
-IDP_HOST=idp.ssocircle.com
+IDP_HOST=dev-278446.okta.com
+#IDP_HOST=idp.ssocircle.com
 IDP_PORT=443
 CERTIFICATE_FILE=ssocircle.cert
 KEYSTORE_FILE=samlKeystore.jks

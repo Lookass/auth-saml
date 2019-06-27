@@ -16,15 +16,11 @@
 
 package com.vdenotaris.spring.boot.security.saml.web.config;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Timer;
+import java.util.*;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
+import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.opensaml.saml2.metadata.provider.HTTPMetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProvider;
@@ -103,7 +99,7 @@ import com.vdenotaris.spring.boot.security.saml.web.core.SAMLUserDetailsServiceI
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements InitializingBean, DisposableBean {
- 
+
 	private Timer backgroundTaskTimer;
 	private MultiThreadedHttpConnectionManager multiThreadedHttpConnectionManager;
 
@@ -246,7 +242,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
     @Bean
     public ExtendedMetadata extendedMetadata() {
 	    	ExtendedMetadata extendedMetadata = new ExtendedMetadata();
-	    	extendedMetadata.setIdpDiscoveryEnabled(true); 
+	    	extendedMetadata.setIdpDiscoveryEnabled(true);
 	    	extendedMetadata.setSignMetadata(false);
 	    	extendedMetadata.setEcpEnabled(true);
 	    	return extendedMetadata;
@@ -264,8 +260,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
 	@Qualifier("idp-ssocircle")
 	public ExtendedMetadataDelegate ssoCircleExtendedMetadataProvider()
 			throws MetadataProviderException {
-		String idpSSOCircleMetadataURL = "https://idp.ssocircle.com/idp-meta.xml";
-		HTTPMetadataProvider httpMetadataProvider = new HTTPMetadataProvider(
+		String idpSSOCircleMetadataURL = "https://dev-278446.okta.com/app/exksbgczvRA74FEVr356/sso/saml/metadata"; //URL of the IDP metadata.
+        //String idpSSOCircleMetadataURL = "https://idp.ssocircle.com/idp-meta.xml";
+        HTTPMetadataProvider httpMetadataProvider = new HTTPMetadataProvider(
 				this.backgroundTaskTimer, httpClient(), idpSSOCircleMetadataURL);
 		httpMetadataProvider.setParserPool(parserPool());
 		ExtendedMetadataDelegate extendedMetadataDelegate = 
@@ -291,10 +288,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
     @Bean
     public MetadataGenerator metadataGenerator() {
         MetadataGenerator metadataGenerator = new MetadataGenerator();
-        metadataGenerator.setEntityId("com:vdenotaris:spring:sp");
+        metadataGenerator.setEntityId("com:lookass:spring:sp"); //In the IDP configuration the EntityId must match to this
+        //metadataGenerator.setEntityId("com:vdenotaris:spring:sp");
         metadataGenerator.setExtendedMetadata(extendedMetadata());
         metadataGenerator.setIncludeDiscoveryExtension(false);
-        metadataGenerator.setKeyManager(keyManager()); 
+        metadataGenerator.setKeyManager(keyManager());
+		List nameIdTypes = new ArrayList();
+		nameIdTypes.add("EMAIL");
+        metadataGenerator.setNameID(nameIdTypes); //Name identifiers to be included in the metadata.
         return metadataGenerator;
     }
  

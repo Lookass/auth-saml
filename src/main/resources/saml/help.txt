@@ -1,0 +1,10 @@
+1.  keytool -genkeypair -alias apollo -keypass nalle123 -keystore samlKeystore.jks -keyalg RSA -sigalg SHA256withRSA
+    => Alias must be the same that the "defaultKey" specified for the keymanager
+    => The required keystore password must be the same as "storePass"
+
+2.  keytool -list -v -keystore samlKeystore.jks -storepass nalle123
+    => Check if the privatre key was correctly added
+
+3.  sh update-certifcate.sh
+    => If keytool command not found => add C:\Program Files\Java\jdk1.8.0_181\bin\ to environmental variable "Path"
+    => This script import the certificate from *.okta.com and add to keystore

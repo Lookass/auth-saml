@@ -42,6 +42,12 @@ public class SAMLUserDetailsServiceImpl implements SAMLUserDetailsService {
 		// data in the SAML assertion and return UserDetails object describing the user.
 		
 		String userID = credential.getNameID().getValue();
+		//todo retrieve from database the user based on his email name etc
+		System.out.println(credential.getAttributeAsString("firstName")); //those attributes statements are set in the IDP Admin console
+		System.out.println(credential.getAttributeAsString("lastName"));
+		System.out.println(credential.getAttributeAsString("email"));
+		System.out.println(credential.getAttributeAsString("login"));
+		System.out.println(credential.getAttributeAsString("employeeNumber"));
 		
 		LOG.info(userID + " is logged in");
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
